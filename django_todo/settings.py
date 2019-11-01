@@ -13,6 +13,12 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import os
 import dj_database_url
 
+
+if os.environ.get('DEVELOPMENT'):
+    development = True
+else:
+    development = False
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -24,10 +30,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '5b5jx19j!2!*df*ps7z-8&q98g$ttg5%ald(1yofp$fusx&qo*'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = development # if development is True then debug is True is False, then Debug is also False {don't have to change it back for Production
 
-ALLOWED_HOSTS = ['4bab96a5511946518b4ff82903d8b0ef.vfs.cloud9.us-east-1.amazonaws.com',
-                'miklos-django-todo.herokuapp.com']
+if development:
+    ALLOWED_HOSTS = ['4bab96a5511946518b4ff82903d8b0ef.vfs.cloud9.us-east-1.amazonaws.com']
+else:
+    ALLOWED_HOSTS = [os.environ.get('HOSTNAME')]
 
 
 # Application definition
@@ -75,15 +83,15 @@ WSGI_APPLICATION = 'django_todo.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
-
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#    }
-#}
-
-DATABASES = {'default': dj_database_url.parse("postgres://ixkgrwwlckoshq:32279a5473c13b298f42855a7ee1622a80dc58b97e45aa4a5741aed349c812d7@ec2-54-246-92-116.eu-west-1.compute.amazonaws.com:5432/dcf70kdpikq4nn")}
+if development:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
+else:
+    DATABASES = {'default': dj_database_url.parse("postgres://ixkgrwwlckoshq:32279a5473c13b298f42855a7ee1622a80dc58b97e45aa4a5741aed349c812d7@ec2-54-246-92-116.eu-west-1.compute.amazonaws.com:5432/dcf70kdpikq4nn")}
 
 
 # Password validation
